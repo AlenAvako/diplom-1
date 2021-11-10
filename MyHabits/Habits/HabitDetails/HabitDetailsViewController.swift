@@ -86,7 +86,7 @@ extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource
         
         if HabitsStore.shared.habit(sortHabitArray[habitIndex], isTrackedIn: dateArray[indexPath.item]) {
             if indexPath.row == 0 {
-                
+                cell.isHidden = true
             } else {
                 cell.accessoryType = .checkmark
                 cell.tintColor = UIColor(named: "appPurple")
