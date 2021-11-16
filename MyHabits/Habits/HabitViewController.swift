@@ -9,35 +9,17 @@ import UIKit
 
 class HabitViewController: UIViewController {
     
-    var habitIndex: Int = 0
+    public var habitIndex: Int = 0
     
-    var isAdded = false
+    public var isAdded = false
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-
-        setupNavigationBar()
-        setupView()
-    }
+    lazy var newColor: UIColor? = .black
     
-    private func setupNavigationBar() {
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(save))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Отменить", style: .plain, target: self, action: #selector(cancel))
-    }
+    lazy var date = Date()
     
-    fileprivate lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.toAutoLayout()
-        return scrollView
-    }()
+    lazy var habitDates: [Date] = []
     
-    fileprivate lazy var contentView: UIView = {
-        let contentView = UIView()
-        contentView.toAutoLayout()
-        return contentView
-    }()
+    lazy var titleText: String = ""
     
     lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -46,8 +28,6 @@ class HabitViewController: UIViewController {
         label.text = "НАЗВАНИЕ"
         return label
     }()
-    
-    lazy var titleText: String = ""
     
     lazy var titleTextField: UITextField = {
         let textField = UITextField()
@@ -71,8 +51,6 @@ class HabitViewController: UIViewController {
         return label
     }()
     
-    lazy var newColor: UIColor? = .black
-    
     lazy var colorPickerButton: UIButton = {
         let button = UIButton()
         button.toAutoLayout()
@@ -82,10 +60,6 @@ class HabitViewController: UIViewController {
         button.layer.cornerRadius = 15
         return button
     }()
-    
-    lazy var date = Date()
-    
-    lazy var habitDates: [Date] = []
     
     lazy var dateLabel: UILabel = {
         let label = UILabel()
@@ -131,35 +105,68 @@ class HabitViewController: UIViewController {
         return button
     }()
     
-    func setupView() {
-        view.addSubviews(titleLabel, titleTextField, colorPickerLabel, colorPickerButton, dateLabel, dateField, timeField, datePicker, deleteButton)
+    lazy var titleStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.toAutoLayout()
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.spacing = 7
+        stackView.addArrangedSubviews(titleLabel, titleTextField)
+        return stackView
+    }()
+    
+    lazy var colorStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.toAutoLayout()
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.spacing = 7
+        stackView.addArrangedSubviews(colorPickerLabel, colorPickerButton)
+        return stackView
+    }()
+    
+    lazy var dateStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.toAutoLayout()
+        stackView.axis = .horizontal
+        stackView.alignment = .leading
+        stackView.spacing = 5
+        stackView.addArrangedSubviews(dateField, timeField)
+        return stackView
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+
+        setupNavigationBar()
+        setupView()
+    }
+    
+    private func setupNavigationBar() {
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(save))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Отменить", style: .plain, target: self, action: #selector(cancel))
+    }
+    
+    private func setupView() {
+        view.addSubviews(titleStackView, colorStackView, dateLabel, dateStackView, datePicker, deleteButton)
         
         NSLayoutConstraint.activate([
+            titleStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            titleStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 21),
+            
+            colorStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            colorStackView.topAnchor.constraint(equalTo: titleStackView.bottomAnchor, constant: 15),
 
-            titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 21),
-            
-            titleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-            titleTextField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 7),
-            titleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
-            titleTextField.heightAnchor.constraint(equalToConstant: 22),
-            
-            colorPickerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            colorPickerLabel.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 15),
-            
-            colorPickerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            colorPickerButton.topAnchor.constraint(equalTo: colorPickerLabel.bottomAnchor, constant: 7),
             colorPickerButton.widthAnchor.constraint(equalToConstant: 30),
             colorPickerButton.heightAnchor.constraint(equalToConstant: 30),
             
             dateLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            dateLabel.topAnchor.constraint(equalTo: colorPickerButton.bottomAnchor, constant: 15),
+            dateLabel.topAnchor.constraint(equalTo: colorStackView.bottomAnchor, constant: 15),
             
-            dateField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            dateField.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 7),
-            
-            timeField.leadingAnchor.constraint(equalTo: dateField.trailingAnchor, constant: 5),
-            timeField.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 7),
+            dateStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            dateStackView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 7),
             
             datePicker.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             datePicker.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),

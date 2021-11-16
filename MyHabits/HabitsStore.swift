@@ -157,7 +157,6 @@ public final class HabitsStore {
     /// - Parameter habit: Привычка, в которую добавится новая дата.
     public func track(_ habit: Habit) {
         habit.trackDates.append(.init())
-//        habit.trackDates.removeAll()
         save()
     }
     

@@ -117,12 +117,22 @@ class InfoViewController: UIViewController {
         return text
     }()
     
+    lazy var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.toAutoLayout()
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.spacing = 12
+        stackView.addArrangedSubviews(infoSection, textSectionOne, textSectionTwo, textSectionThree, textSectionFour, textSectionFive, textSectionSix, sourceTextSection)
+        return stackView
+    }()
+    
     private func setupView() {
         view.addSubview(scrollView)
         
         scrollView.addSubview(contentView)
         
-        contentView.addSubviews(label, infoSection, textSectionOne, textSectionTwo, textSectionThree, textSectionFour, textSectionFive, textSectionSix, sourceTextSection)
+        contentView.addSubviews(label, stackView)
         
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
@@ -139,38 +149,10 @@ class InfoViewController: UIViewController {
             label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 22),
             
-            infoSection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            infoSection.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 16),
-            infoSection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            
-            textSectionOne.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            textSectionOne.topAnchor.constraint(equalTo: infoSection.bottomAnchor, constant: 12),
-            textSectionOne.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            
-            textSectionTwo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            textSectionTwo.topAnchor.constraint(equalTo: textSectionOne.bottomAnchor, constant: 12),
-            textSectionTwo.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            
-            textSectionThree.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            textSectionThree.topAnchor.constraint(equalTo: textSectionTwo.bottomAnchor, constant: 12),
-            textSectionThree.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            
-            textSectionFour.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            textSectionFour.topAnchor.constraint(equalTo: textSectionThree.bottomAnchor, constant: 12),
-            textSectionFour.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            
-            textSectionFive.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            textSectionFive.topAnchor.constraint(equalTo: textSectionFour.bottomAnchor, constant: 12),
-            textSectionFive.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            
-            textSectionSix.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            textSectionSix.topAnchor.constraint(equalTo: textSectionFive.bottomAnchor, constant: 12),
-            textSectionSix.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            
-            sourceTextSection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            sourceTextSection.topAnchor.constraint(equalTo: textSectionSix.bottomAnchor, constant: 16),
-            sourceTextSection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            sourceTextSection.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            stackView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ])
     }
 }

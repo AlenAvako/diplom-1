@@ -62,10 +62,6 @@ class HabitDetailsViewController: UIViewController {
 
 extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 5
     }
@@ -77,12 +73,14 @@ extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource
         formatter.doesRelativeDateFormatting = true
 
         
+        
         let cell = dateTableView.dequeueReusableCell(withIdentifier: HabitDatesTableViewCell.id, for: indexPath) as! HabitDatesTableViewCell
         
-        let dateArray : [Date] = Array(HabitsStore.shared.dates.reversed())
+        let dateArray: [Date] = Array(HabitsStore.shared.dates.reversed())
         let sortHabitArray = HabitsStore.shared.habits
-        cell.textLabel?.text = formatter.string(from: dateArray[indexPath.row])
-        
+        let stringDate = HabitsStore.shared.trackDateString(forIndex: indexPath.row)
+//        cell.textLabel?.text = formatter.string(from: dateArray[indexPath.row])
+        cell.textLabel?.text = stringDate
         
         if HabitsStore.shared.habit(sortHabitArray[habitIndex], isTrackedIn: dateArray[indexPath.item]) {
             if indexPath.row == 0 {
@@ -95,10 +93,6 @@ extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource
         
         
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
