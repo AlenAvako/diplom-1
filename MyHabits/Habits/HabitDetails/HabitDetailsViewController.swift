@@ -72,15 +72,13 @@ extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource
         formatter.locale = Locale(identifier: "ru_RU")
         formatter.doesRelativeDateFormatting = true
 
-        
-        
         let cell = dateTableView.dequeueReusableCell(withIdentifier: HabitDatesTableViewCell.id, for: indexPath) as! HabitDatesTableViewCell
         
         let dateArray: [Date] = Array(HabitsStore.shared.dates.reversed())
         let sortHabitArray = HabitsStore.shared.habits
-        let stringDate = HabitsStore.shared.trackDateString(forIndex: indexPath.row)
-//        cell.textLabel?.text = formatter.string(from: dateArray[indexPath.row])
-        cell.textLabel?.text = stringDate
+//        let stringDate = HabitsStore.shared.trackDateString(forIndex: indexPath.row)
+        cell.textLabel?.text = formatter.string(from: dateArray[indexPath.row])
+//        cell.textLabel?.text = stringDate
         
         if HabitsStore.shared.habit(sortHabitArray[habitIndex], isTrackedIn: dateArray[indexPath.item]) {
             if indexPath.row == 0 {
@@ -90,8 +88,6 @@ extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource
                 cell.tintColor = UIColor(named: "appPurple")
             }
         }
-        
-        
         return cell
     }
     

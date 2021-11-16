@@ -15,11 +15,11 @@ class HabitViewController: UIViewController {
     
     lazy var newColor: UIColor? = .black
     
-    lazy var date = Date()
-    
     lazy var habitDates: [Date] = []
     
     lazy var titleText: String = ""
+    
+    lazy var date = Date()
     
     lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -55,6 +55,7 @@ class HabitViewController: UIViewController {
         let button = UIButton()
         button.toAutoLayout()
         button.addTarget(self, action: #selector(pickColor), for: .touchUpInside)
+        button.backgroundColor = .black
         button.layer.borderWidth = 0.5
         button.layer.borderColor = UIColor.black.cgColor
         button.layer.cornerRadius = 15
@@ -80,7 +81,7 @@ class HabitViewController: UIViewController {
     lazy var timeField: UILabel = {
         let textField = UILabel()
         textField.toAutoLayout()
-        textField.text = ""
+        textField.text = "09:00 AM"
         textField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         textField.textColor = UIColor(named: "appPurple")
         return textField
@@ -92,6 +93,10 @@ class HabitViewController: UIViewController {
         datePicker.datePickerMode = .time
         datePicker.preferredDatePickerStyle = .wheels
         datePicker.addTarget(self, action: #selector(handler(sender:)), for: .valueChanged)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat =  "hh:mm a"
+        let date = dateFormatter.date(from: "9:00 AM")
+        datePicker.date = date!
         return datePicker
     }()
     
@@ -141,6 +146,10 @@ class HabitViewController: UIViewController {
 
         setupNavigationBar()
         setupView()
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat =  "hh:mm a"
+        date = dateFormatter.date(from: "09:00 AM")!
     }
     
     private func setupNavigationBar() {
