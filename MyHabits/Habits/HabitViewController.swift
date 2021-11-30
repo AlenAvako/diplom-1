@@ -37,7 +37,7 @@ class HabitViewController: UIViewController {
                            action: #selector(titleTextChanged(_:)),
                            for: .editingChanged)
         textField.returnKeyType = .done
-        textField.tintColor = .systemGray2
+        textField.tintColor = UIColor(named: "appBlue")
         textField.textColor = .black
         textField.font = UIFont.systemFont(ofSize: 17)
         return textField

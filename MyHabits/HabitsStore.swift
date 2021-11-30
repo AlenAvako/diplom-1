@@ -57,7 +57,6 @@ public final class Habit: Codable {
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ru_RU")
         formatter.timeStyle = .short
         return formatter
     }()
@@ -114,6 +113,7 @@ public final class HabitsStore {
         return Date.dates(from: startDate, to: .init())
     }
     
+    /// Прогресс выполнения добавленных привычек. Привычка считается выполненной, если пользователь добавлял время больше 5 раз.
     /// Возвращает значение от 0 до 1.
     public var todayProgress: Float {
         guard habits.isEmpty == false else {
@@ -131,7 +131,6 @@ public final class HabitsStore {
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.locale = .init(identifier: "ru_RU")
         formatter.dateStyle = .medium
         formatter.timeStyle = .none
         formatter.doesRelativeDateFormatting = true
@@ -141,17 +140,6 @@ public final class HabitsStore {
     private lazy var calendar: Calendar = .current
     
     // MARK: - Lifecycle
-    
-    /// Сохраняет все изменения в привычках в UserDefaults.
-    public func save() {
-        do {
-            let data = try encoder.encode(habits)
-            userDefaults.setValue(data, forKey: "habits")
-        }
-        catch {
-            print("Ошибка кодирования привычек для сохранения", error)
-        }
-    }
     
     /// Добавляет текущую дату в trackDates для переданной привычки.
     /// - Parameter habit: Привычка, в которую добавится новая дата.
@@ -176,7 +164,13 @@ public final class HabitsStore {
     /// - Returns: Возвращает true, если привычка была затрекана в переданную дату.
     public func habit(_ habit: Habit, isTrackedIn date: Date) -> Bool {
         habit.trackDates.contains { trackDate in
-            calendar.isDate(date, equalTo: trackDate, toGranularity: .day)
+            guard let trackDateDay = calendar.dateComponents([.day], from: trackDate).day else {
+                return false
+            }
+            guard let dateDay = calendar.dateComponents([.day], from: date).day else {
+                return false
+            }
+            return trackDateDay - dateDay == 0
         }
     }
     
@@ -184,8 +178,7 @@ public final class HabitsStore {
     
     private init() {
         if userDefaults.value(forKey: "start_date") == nil {
-            let startDate = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
-            userDefaults.setValue(startDate, forKey: "start_date")
+            userDefaults.setValue(Date(), forKey: "start_date")
         }
         guard let data = userDefaults.data(forKey: "habits") else {
             return
@@ -195,6 +188,16 @@ public final class HabitsStore {
         }
         catch {
             print("Ошибка декодирования сохранённых привычек", error)
+        }
+    }
+    
+    private func save() {
+        do {
+            let data = try encoder.encode(habits)
+            userDefaults.setValue(data, forKey: "habits")
+        }
+        catch {
+            print("Ошибка кодирования привычек для сохранения", error)
         }
     }
 }

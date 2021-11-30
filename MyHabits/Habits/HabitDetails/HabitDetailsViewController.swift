@@ -29,7 +29,6 @@ class HabitDetailsViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Править", style: .done, target: self, action: #selector(change))
     }
     
@@ -63,7 +62,11 @@ class HabitDetailsViewController: UIViewController {
 extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        if HabitsStore.shared.dates.count > 5 {
+            return 5
+        } else {
+            return HabitsStore.shared.dates.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -71,28 +74,30 @@ extension HabitDetailsViewController: UITableViewDelegate, UITableViewDataSource
         formatter.dateStyle = .long
         formatter.locale = Locale(identifier: "ru_RU")
         formatter.doesRelativeDateFormatting = true
-
+        
         let cell = dateTableView.dequeueReusableCell(withIdentifier: HabitDatesTableViewCell.id, for: indexPath) as! HabitDatesTableViewCell
         
         let dateArray: [Date] = Array(HabitsStore.shared.dates.reversed())
         let sortHabitArray = HabitsStore.shared.habits
-//        let stringDate = HabitsStore.shared.trackDateString(forIndex: indexPath.row)
         cell.textLabel?.text = formatter.string(from: dateArray[indexPath.row])
-//        cell.textLabel?.text = stringDate
+
+        if indexPath.row == 0 {
+            cell.isHidden = true
+        }
+
         
         if HabitsStore.shared.habit(sortHabitArray[habitIndex], isTrackedIn: dateArray[indexPath.item]) {
-            if indexPath.row == 0 {
-                cell.isHidden = true
-            } else {
                 cell.accessoryType = .checkmark
                 cell.tintColor = UIColor(named: "appPurple")
-            }
         }
         return cell
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let header = "    АКТИВНОСТЬ"
+        let header = "АКТИВНОСТЬ"
+        
+        let headerInset: CGFloat = 16
+        tableView.separatorInset = UIEdgeInsets.init(top: 0, left: headerInset, bottom: 0, right: 0)
 
         return header
     }

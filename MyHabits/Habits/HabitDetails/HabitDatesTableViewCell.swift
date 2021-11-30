@@ -29,8 +29,4 @@ class HabitDatesTableViewCell: UITableViewCell {
         label.textColor = .black
         return label
     }()
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-    }
 }
